@@ -1,34 +1,38 @@
-const socket = new WebSocket("ws://localhost:8080");
+fetch("/env")
+  .then((res) => res.json())
+  .then(({ websocketUrl }) => {
+    const socket = new WebSocket(websocketUrl);
 
-socket.onopen = () => {
-  const username = localStorage.getItem("username");
-  socket.send(JSON.stringify({ type: "init", username }));
-};
+    socket.onopen = () => {
+      const username = localStorage.getItem("username");
+      socket.send(JSON.stringify({ type: "init", username }));
+    };
 
-socket.onerror = (error) => {
-  console.error("WebSocket error:", error);
-};
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
 
-socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
 
-  switch (data.type) {
-    case "welcome": {
-      localStorage.setItem("username", data.username);
-      break;
-    }
+      switch (data.type) {
+        case "welcome": {
+          localStorage.setItem("username", data.username);
+          break;
+        }
 
-    case "incoming_message": {
-      addMessage(data.message, false, data.username);
-      break;
-    }
+        case "incoming_message": {
+          addMessage(data.message, false, data.username);
+          break;
+        }
 
-    default:
-      break;
-  }
-};
+        default:
+          break;
+      }
+    };
 
-socket.onclose = () => {};
+    socket.onclose = () => {};
+  });
 
 const chatMessages = document.getElementById("chat-messages");
 const messageInput = document.getElementById("message-input");
