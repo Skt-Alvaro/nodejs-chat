@@ -1,4 +1,5 @@
 const express = require("express");
+const http = require("http");
 
 const app = express();
 
@@ -8,8 +9,6 @@ app.get("/", (req, res) => {
   return res.sendFile(process.cwd() + "/client/index.html");
 });
 
-app.get("/env", (req, res) => {
-  res.json({ websocketUrl: process.env.WEBSOCKET_URL });
-});
+const server = http.createServer(app);
 
-module.exports = app;
+module.exports = server;

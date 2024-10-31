@@ -1,13 +1,14 @@
 const { WebSocketServer, OPEN } = require("ws");
+const server = require("./app.js");
 const {
   handleCreateUser,
   handleFindUserByUsername,
 } = require("./users/controllers/users.controller.js");
 
-const server = new WebSocketServer({ port: 8080 });
+const wss = new WebSocketServer({ server });
 
 function startServer() {
-  server.on("connection", function connection(ws) {
+  wss.on("connection", function connection(ws) {
     console.log("User connected");
 
     ws.on("message", async (data) => {
@@ -38,7 +39,7 @@ function startServer() {
         }
 
         case "message": {
-          server.broadcastAllButNotMe(
+          wss.broadcastAllButNotMe(
             JSON.stringify({
               type: "incoming_message",
               message,
@@ -56,7 +57,7 @@ function startServer() {
     // ws.send(JSON.stringify({ type: "init", username }));
 
     // // Send message to all users
-    // server.clients.forEach((client) => {
+    // wss.clients.forEach((client) => {
     //   if (client.readyState === OPEN) {
     //     client.send(
     //       JSON.stringify({
@@ -73,18 +74,18 @@ function startServer() {
   });
 }
 
-server.broadcast = (msg) => {
-  server.clients.forEach(function each(client) {
+wss.broadcast = (msg) => {
+  wss.clients.forEach(function each(client) {
     client.send(msg);
   });
 };
 
-server.broadcastAllButNotMe = (msg, ws) => {
-  server.clients.forEach(function each(client) {
+wss.broadcastAllButNotMe = (msg, ws) => {
+  wss.clients.forEach(function each(client) {
     if (client.username !== ws.username) {
       client.send(msg);
     }
   });
 };
 
-module.exports = { startServer, server };
+module.exports = { startServer, wss };
