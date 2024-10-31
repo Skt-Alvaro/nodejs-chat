@@ -22,7 +22,6 @@ function startServer() {
           if (!user) {
             newUsername = `user_${Math.floor(Math.random() * 1000)}`;
             await handleCreateUser(newUsername);
-            console.log("creado");
           }
 
           ws.username = user ? username : newUsername;
@@ -56,17 +55,17 @@ function startServer() {
 
     // ws.send(JSON.stringify({ type: "init", username }));
 
-    // // Send message to all users
-    // wss.clients.forEach((client) => {
-    //   if (client.readyState === OPEN) {
-    //     client.send(
-    //       JSON.stringify({
-    //         type: "info",
-    //         message: `Un nuevo usuario se ha conectado`,
-    //       })
-    //     );
-    //   }
-    // });
+    // Send message to all users
+    wss.clients.forEach((client) => {
+      if (client.readyState === OPEN) {
+        client.send(
+          JSON.stringify({
+            type: "info",
+            message: `Un nuevo usuario se ha conectado`,
+          })
+        );
+      }
+    });
 
     ws.onclose = function close() {
       console.log("User disconnected");

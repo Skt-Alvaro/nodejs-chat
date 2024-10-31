@@ -7,7 +7,9 @@ async function createUser(username) {
 }
 
 async function findUserByUsername(username) {
+  console.log("Empieza a buscar");
   const user = await User.findOne({ username });
+  console.log(user);
 
   return user;
 }
