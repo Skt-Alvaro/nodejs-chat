@@ -1,6 +1,6 @@
 # Real-Time Chat with Node.js, MongoDB, WebSockets, and Vanilla JS
 
-This project is a real-time chat application built with Node.js on the backend, MongoDB as the database, and Vanilla JavaScript for the client-side. It includes group creation and joining functionality via a unique code.
+This project is a real-time chat application built with Node.js on the backend, MongoDB as the database, and Vanilla JavaScript for the client-side.
 
 ## Features
 
